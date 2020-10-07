@@ -28,7 +28,6 @@ describe('TodoService', () => {
     it('expected to create a todo', () => {
       const createTodoDto: CreateTodoDto = {
         description: 'first todo',
-        status: TodoStatus.DONE,
       };
       expect(repo.createTodo).not.toBeCalled();
       service.createTodo(createTodoDto);
