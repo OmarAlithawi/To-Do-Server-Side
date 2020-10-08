@@ -7,7 +7,7 @@ import { FilterDto } from './dto/todo.filter.dto';
 
 const mockRepo = () => ({
   createTodo: jest.fn(),
-  getTodo : jest.fn()
+  getTodo: jest.fn(),
 });
 
 describe('TodoService', () => {
@@ -33,28 +33,28 @@ describe('TodoService', () => {
         description: 'first todo',
       };
       expect(repo.createTodo).not.toBeCalled();
-     const result = await service.createTodo(createTodoDto);
+      const result = await service.createTodo(createTodoDto);
       expect(repo.createTodo).toBeCalled();
       expect(result).toEqual('value');
     });
   });
 
-  describe('Get todoes' , () => {
-    it('expected to get atleast one todo' , async () =>{
+  describe('Get todoes', () => {
+    it('expected to get atleast one todo', async () => {
       (repo.getTodo as jest.Mock).mockResolvedValue('value');
       const filter: FilterDto = {
         description: 'first todo',
-        status : TodoStatus.IN_PROGRESS
+        status: TodoStatus.IN_PROGRESS,
       };
       expect(repo.getTodo).not.toBeCalled();
-     const result = await service.getTodo(filter);
+      const result = await service.getTodo(filter);
       expect(repo.getTodo).toBeCalled();
       expect(result).toEqual('value');
     });
 
-    it('Throw an error' , async () =>{
+    it('Throw an error', async () => {
       (repo.getTodo as jest.Mock).mockResolvedValue(null);
       expect(service.createTodo).rejects.toThrow();
     });
-  })
+  });
 });

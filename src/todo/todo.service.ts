@@ -12,7 +12,7 @@ export class TodoService {
     private readonly todoRepository: TodoRepository,
   ) {}
 
-  async getTodo (filterDto:FilterDto) {
+  async getTodo(filterDto: FilterDto) {
     return this.todoRepository.getTodo(filterDto);
   }
 

@@ -7,23 +7,23 @@ import { Todo } from './todo.entity';
 
 @EntityRepository(Todo)
 export class TodoRepository extends Repository<Todo> {
-
-  async getTodo (filterDto : FilterDto) {
-    const {description , status} = filterDto;
+  async getTodo(filterDto: FilterDto) {
+    const { description, status } = filterDto;
     const query = this.createQueryBuilder('todo');
-    
-    if(description){
-       query.andWhere('todo.description LIKE :description' 
-      , {description : `%${description}%`});
+
+    if (description) {
+      query.andWhere('todo.description LIKE :description', {
+        description: `%${description}%`,
+      });
     }
 
-    if(status){
-      query.andWhere('todo.status = :status' , {status});
+    if (status) {
+      query.andWhere('todo.status = :status', { status });
     }
 
-    try{
-     return await query.getMany();
-    }catch(e){
+    try {
+      return await query.getMany();
+    } catch (e) {
       console.log(e);
       throw new BadGatewayException();
     }

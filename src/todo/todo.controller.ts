@@ -8,7 +8,7 @@ export class TodoController {
   constructor(private todoService: TodoService) {}
 
   @Get()
-  getTodo (@Query() filterDto:FilterDto) {
+  getTodo(@Query() filterDto: FilterDto) {
     return this.todoService.getTodo(filterDto);
   }
 
