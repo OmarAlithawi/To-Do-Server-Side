@@ -9,13 +9,16 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CreateTodoDto } from './dto/todo.create.dto';
 import { FilterDto } from './dto/todo.filter.dto';
 import { Todo } from './todo.entity';
 import { TodoService } from './todo.service';
 
 @Controller('todo')
+@UseGuards(AuthGuard('jwt'))
 export class TodoController {
   constructor(private todoService: TodoService) {}
 
