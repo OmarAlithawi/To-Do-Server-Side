@@ -1,4 +1,5 @@
 import { BadGatewayException, BadRequestException } from '@nestjs/common';
+import { User } from 'src/auth/auth.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateTodoDto } from './dto/todo.create.dto';
 import { FilterDto } from './dto/todo.filter.dto';
@@ -7,10 +8,10 @@ import { Todo } from './todo.entity';
 
 @EntityRepository(Todo)
 export class TodoRepository extends Repository<Todo> {
-  async getTodo(filterDto: FilterDto): Promise<Todo[]> {
+  async getTodo(filterDto: FilterDto , user:User): Promise<Todo[]> {
     const { description, status } = filterDto;
     const query = this.createQueryBuilder('todo');
-
+    query.where('todo.userId = :userId',{userId:user.id})
     if (description) {
       query.andWhere('todo.description LIKE :description', {
         description: `%${description}%`,
@@ -37,13 +38,16 @@ export class TodoRepository extends Repository<Todo> {
     return todo;
   }
 
-  async createTodo(createTodoDto: CreateTodoDto): Promise<Todo> {
+  async createTodo(createTodoDto: CreateTodoDto , user:User): Promise<Todo> {
     const { description } = createTodoDto;
     const todo = new Todo();
     todo.description = description;
     todo.status = TodoStatus.IN_PROGRESS;
+    todo.user = user;
     try {
-      return await todo.save();
+      const newTodo = await todo.save();
+       delete todo.user;
+       return newTodo;
     } catch (e) {
       throw new BadRequestException();
     }
@@ -53,7 +57,7 @@ export class TodoRepository extends Repository<Todo> {
     this.remove(todo);
   }
 
-  async updateTodo(todo: Todo, updateTodoDto: FilterDto) {
+  async updateTodo(todo: Todo, updateTodoDto: FilterDto):Promise<Todo> {
     const { description, status } = updateTodoDto;
     if (description) {
       todo.description = description;

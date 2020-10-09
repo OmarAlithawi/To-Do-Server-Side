@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -23,8 +24,9 @@ export class TodoController {
   constructor(private todoService: TodoService) {}
 
   @Get()
-  getTodo(@Query() filterDto: FilterDto): Promise<Todo[]> {
-    return this.todoService.getTodo(filterDto);
+  getTodo(@Query() filterDto: FilterDto,@Req() req): Promise<Todo[]> {
+    const user = req.user
+    return this.todoService.getTodo(filterDto , user);
   }
 
   @Get(':id')
@@ -33,8 +35,9 @@ export class TodoController {
   }
 
   @Post()
-  createTodo(@Body() createTodoDto: CreateTodoDto): Promise<Todo> {
-    return this.todoService.createTodo(createTodoDto);
+  createTodo(@Body() createTodoDto: CreateTodoDto , @Req() req ): Promise<Todo> {
+   const user = req.user
+    return this.todoService.createTodo(createTodoDto , user);
   }
 
   @Delete(':id')
@@ -47,7 +50,7 @@ export class TodoController {
   async updateTodo(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTodoDto: FilterDto,
-  ) {
+  ) :Promise<Todo> {
     const todo: Todo = await this.getTodoById(id);
     return this.todoService.updateTodo(todo, updateTodoDto);
   }
