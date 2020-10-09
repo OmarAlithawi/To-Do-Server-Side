@@ -21,6 +21,7 @@ export class Todo extends BaseEntity {
     user => user.todo,
   )
   user: User;
+
   @Column()
   userId: number;
 }
