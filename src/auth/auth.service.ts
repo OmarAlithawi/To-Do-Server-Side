@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './auth.entity';
@@ -12,6 +12,7 @@ export class AuthService {
     @InjectRepository(UserRepository) private authRepository: UserRepository,
     private jwtService: JwtService,
   ) {}
+  private logger = new Logger('AuthService');
 
   async signUp(userCredentialsDto: UserCredetialsDto): Promise<User> {
     return this.authRepository.signUp(userCredentialsDto);
@@ -25,6 +26,7 @@ export class AuthService {
     if (!username) {
       throw new UnauthorizedException();
     }
+    this.logger.log(`User signed in ${username}`);
     const payload: Payload = { username };
     return {
       access_token: this.jwtService.sign(payload),

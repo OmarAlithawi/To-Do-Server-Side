@@ -1,4 +1,9 @@
-import { BadGatewayException, BadRequestException } from '@nestjs/common';
+import {
+  BadGatewayException,
+  BadRequestException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from 'src/auth/auth.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateTodoDto } from './dto/todo.create.dto';
@@ -8,6 +13,8 @@ import { Todo } from './todo.entity';
 
 @EntityRepository(Todo)
 export class TodoRepository extends Repository<Todo> {
+  private logger = new Logger('TodoRepository');
+
   async getTodo(filterDto: FilterDto, user: User): Promise<Todo[]> {
     const { description, status } = filterDto;
     const query = this.createQueryBuilder('todo');
@@ -25,7 +32,7 @@ export class TodoRepository extends Repository<Todo> {
     try {
       return await query.getMany();
     } catch (e) {
-      throw new BadRequestException();
+      throw new NotFoundException();
     }
   }
 
@@ -33,7 +40,7 @@ export class TodoRepository extends Repository<Todo> {
     const todo = await this.findOne({ where: { id } });
 
     if (!todo) {
-      throw new BadRequestException();
+      throw new NotFoundException();
     }
     return todo;
   }
@@ -47,6 +54,7 @@ export class TodoRepository extends Repository<Todo> {
     try {
       const newTodo = await todo.save();
       delete todo.user;
+      this.logger.log(`new todo has been created ${newTodo}`);
       return newTodo;
     } catch (e) {
       throw new BadRequestException();
@@ -55,6 +63,7 @@ export class TodoRepository extends Repository<Todo> {
 
   deleteTodo(todo: Todo): void {
     this.remove(todo);
+    this.logger.log(`todo with the id  ${todo.id} has been deleted`);
   }
 
   async updateTodo(todo: Todo, updateTodoDto: FilterDto): Promise<Todo> {
@@ -68,6 +77,7 @@ export class TodoRepository extends Repository<Todo> {
 
     try {
       const newTodo = await todo.save();
+      this.logger.log(`todo with the id  ${newTodo.id} has been updated`);
       return newTodo;
     } catch {
       throw new BadRequestException();

@@ -2,10 +2,15 @@ import { EntityRepository, Repository } from 'typeorm';
 import { User } from './auth.entity';
 import { UserCredetialsDto } from './dto/user.credetials.dto';
 import * as bcrypt from 'bcrypt';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
+  private logger = new Logger('UserRepository');
   async signUp(userCredentialsDto: UserCredetialsDto): Promise<User> {
     const { username, password } = userCredentialsDto;
     const user = new User();
@@ -14,7 +19,9 @@ export class UserRepository extends Repository<User> {
     user.password = await this.hashPassword(password, user.salt);
 
     try {
-      return await user.save();
+      const newUser = await user.save();
+      this.logger.log(`new user signed up ${newUser}`);
+      return newUser;
     } catch {
       throw new BadRequestException();
     }
