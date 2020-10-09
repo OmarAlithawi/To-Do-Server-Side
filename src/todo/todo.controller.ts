@@ -24,25 +24,33 @@ export class TodoController {
   constructor(private todoService: TodoService) {}
 
   @Get()
-  getTodo(@Query() filterDto: FilterDto,@Req() req): Promise<Todo[]> {
-    const user = req.user
-    return this.todoService.getTodo(filterDto , user);
+  getTodo(@Query() filterDto: FilterDto, @Req() req): Promise<Todo[]> {
+    const user = req.user;
+    return this.todoService.getTodo(filterDto, user);
   }
 
   @Get(':id')
-  getTodoById(@Param('id', ParseIntPipe) id: number): Promise<Todo> {
-    return this.todoService.getTodoById(id);
+  getTodoById(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req,
+  ): Promise<Todo> {
+    const user = req.user;
+    return this.todoService.getTodoById(id, user);
   }
 
   @Post()
-  createTodo(@Body() createTodoDto: CreateTodoDto , @Req() req ): Promise<Todo> {
-   const user = req.user
-    return this.todoService.createTodo(createTodoDto , user);
+  createTodo(@Body() createTodoDto: CreateTodoDto, @Req() req): Promise<Todo> {
+    const user = req.user;
+    return this.todoService.createTodo(createTodoDto, user);
   }
 
   @Delete(':id')
-  async deleteTodo(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    const todo: Todo = await this.getTodoById(id);
+  async deleteTodo(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req,
+  ): Promise<void> {
+    const user = req.user;
+    const todo: Todo = await this.getTodoById(id, user);
     return this.todoService.deleteTodo(todo);
   }
 
@@ -50,8 +58,10 @@ export class TodoController {
   async updateTodo(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTodoDto: FilterDto,
-  ) :Promise<Todo> {
-    const todo: Todo = await this.getTodoById(id);
+    @Req() req,
+  ): Promise<Todo> {
+    const user = req.user;
+    const todo: Todo = await this.getTodoById(id, user);
     return this.todoService.updateTodo(todo, updateTodoDto);
   }
 }

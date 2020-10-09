@@ -8,10 +8,10 @@ import { Todo } from './todo.entity';
 
 @EntityRepository(Todo)
 export class TodoRepository extends Repository<Todo> {
-  async getTodo(filterDto: FilterDto , user:User): Promise<Todo[]> {
+  async getTodo(filterDto: FilterDto, user: User): Promise<Todo[]> {
     const { description, status } = filterDto;
     const query = this.createQueryBuilder('todo');
-    query.where('todo.userId = :userId',{userId:user.id})
+    query.where('todo.userId = :userId', { userId: user.id });
     if (description) {
       query.andWhere('todo.description LIKE :description', {
         description: `%${description}%`,
@@ -29,8 +29,8 @@ export class TodoRepository extends Repository<Todo> {
     }
   }
 
-  async getTodoById(id: number): Promise<Todo> {
-    const todo = await this.findOne({ where: { id } });
+  async getTodoById(id: number, user: User): Promise<Todo> {
+    const todo = await this.findOne({ where: { id, userId: user.id } });
 
     if (!todo) {
       throw new BadRequestException();
@@ -38,7 +38,7 @@ export class TodoRepository extends Repository<Todo> {
     return todo;
   }
 
-  async createTodo(createTodoDto: CreateTodoDto , user:User): Promise<Todo> {
+  async createTodo(createTodoDto: CreateTodoDto, user: User): Promise<Todo> {
     const { description } = createTodoDto;
     const todo = new Todo();
     todo.description = description;
@@ -46,8 +46,8 @@ export class TodoRepository extends Repository<Todo> {
     todo.user = user;
     try {
       const newTodo = await todo.save();
-       delete todo.user;
-       return newTodo;
+      delete todo.user;
+      return newTodo;
     } catch (e) {
       throw new BadRequestException();
     }
@@ -57,7 +57,7 @@ export class TodoRepository extends Repository<Todo> {
     this.remove(todo);
   }
 
-  async updateTodo(todo: Todo, updateTodoDto: FilterDto):Promise<Todo> {
+  async updateTodo(todo: Todo, updateTodoDto: FilterDto): Promise<Todo> {
     const { description, status } = updateTodoDto;
     if (description) {
       todo.description = description;

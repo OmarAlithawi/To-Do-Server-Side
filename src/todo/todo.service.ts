@@ -13,23 +13,23 @@ export class TodoService {
     private readonly todoRepository: TodoRepository,
   ) {}
 
-  async getTodo(filterDto: FilterDto , user:User): Promise<Todo[]> {
-    return this.todoRepository.getTodo(filterDto , user);
+  async getTodo(filterDto: FilterDto, user: User): Promise<Todo[]> {
+    return this.todoRepository.getTodo(filterDto, user);
   }
 
-  async getTodoById(id: number): Promise<Todo> {
-    return this.todoRepository.getTodoById(id);
+  async getTodoById(id: number, user: User): Promise<Todo> {
+    return this.todoRepository.getTodoById(id, user);
   }
 
-  async createTodo(createTodoDto: CreateTodoDto , user:User): Promise<Todo> {
-    return this.todoRepository.createTodo(createTodoDto , user);
+  async createTodo(createTodoDto: CreateTodoDto, user: User): Promise<Todo> {
+    return this.todoRepository.createTodo(createTodoDto, user);
   }
 
   deleteTodo(todo: Todo): void {
     return this.todoRepository.deleteTodo(todo);
   }
 
-  async updateTodo(todo: Todo, updateTodoDto: FilterDto):Promise<Todo>  {
+  async updateTodo(todo: Todo, updateTodoDto: FilterDto): Promise<Todo> {
     return this.todoRepository.updateTodo(todo, updateTodoDto);
   }
 }

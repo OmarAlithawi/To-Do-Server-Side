@@ -5,6 +5,7 @@ import { TodoRepository } from './todo.repository';
 import { TodoService } from './todo.service';
 import { FilterDto } from './dto/todo.filter.dto';
 import { Todo } from './todo.entity';
+import { User } from 'src/auth/auth.entity';
 
 const mockRepo = () => ({
   createTodo: jest.fn(),
@@ -13,6 +14,11 @@ const mockRepo = () => ({
   deleteTodo: jest.fn(),
   updateTodo: jest.fn(),
 });
+
+const mockUser: any = {
+  username: 'john',
+  id: 1,
+};
 
 describe('TodoService', () => {
   let service: TodoService;
@@ -36,8 +42,9 @@ describe('TodoService', () => {
       const createTodoDto: CreateTodoDto = {
         description: 'first todo',
       };
+
       expect(repo.createTodo).not.toBeCalled();
-      const result = await service.createTodo(createTodoDto);
+      const result = await service.createTodo(createTodoDto, mockUser);
       expect(repo.createTodo).toBeCalled();
       expect(result).toEqual('value');
     });
@@ -51,7 +58,7 @@ describe('TodoService', () => {
         status: TodoStatus.IN_PROGRESS,
       };
       expect(repo.getTodo).not.toBeCalled();
-      const result = await service.getTodo(filter);
+      const result = await service.getTodo(filter, mockUser);
       expect(repo.getTodo).toBeCalled();
       expect(result).toEqual('value');
     });
@@ -67,7 +74,7 @@ describe('TodoService', () => {
       (repo.getTodoById as jest.Mock).mockResolvedValue('value');
       const id = 1;
       expect(repo.getTodoById).not.toBeCalled();
-      const result = await service.getTodoById(id);
+      const result = await service.getTodoById(id, mockUser);
       expect(repo.getTodoById).toBeCalled();
       expect(result).toEqual('value');
     });
@@ -84,7 +91,7 @@ describe('TodoService', () => {
       const id = 1;
       const mockTodo = new Todo();
       expect(repo.deleteTodo).not.toBeCalled();
-      const result = await service.getTodoById(id);
+      const result = await service.getTodoById(id, mockUser);
       expect(repo.getTodoById).toBeCalled();
       expect(result).toEqual('value');
       if (todo) {
@@ -104,7 +111,7 @@ describe('TodoService', () => {
         status: TodoStatus.IN_PROGRESS,
       };
       expect(repo.updateTodo).not.toBeCalled();
-      const result = await service.getTodoById(id);
+      const result = await service.getTodoById(id, mockUser);
       expect(repo.getTodoById).toBeCalled();
       expect(result).toEqual('value');
       if (todo) {
