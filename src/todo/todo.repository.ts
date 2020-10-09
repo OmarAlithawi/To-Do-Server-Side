@@ -29,8 +29,8 @@ export class TodoRepository extends Repository<Todo> {
     }
   }
 
-  async getTodoById(id: number, user: User): Promise<Todo> {
-    const todo = await this.findOne({ where: { id, userId: user.id } });
+  async getTodoById(id: number): Promise<Todo> {
+    const todo = await this.findOne({ where: { id } });
 
     if (!todo) {
       throw new BadRequestException();
@@ -67,7 +67,8 @@ export class TodoRepository extends Repository<Todo> {
     }
 
     try {
-      return await todo.save();
+      const newTodo = await todo.save();
+      return newTodo;
     } catch {
       throw new BadRequestException();
     }

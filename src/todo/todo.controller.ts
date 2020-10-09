@@ -30,12 +30,8 @@ export class TodoController {
   }
 
   @Get(':id')
-  getTodoById(
-    @Param('id', ParseIntPipe) id: number,
-    @Req() req,
-  ): Promise<Todo> {
-    const user = req.user;
-    return this.todoService.getTodoById(id, user);
+  async getTodoById(@Param('id', ParseIntPipe) id: number): Promise<Todo> {
+    return this.todoService.getTodoById(id);
   }
 
   @Post()
@@ -45,12 +41,8 @@ export class TodoController {
   }
 
   @Delete(':id')
-  async deleteTodo(
-    @Param('id', ParseIntPipe) id: number,
-    @Req() req,
-  ): Promise<void> {
-    const user = req.user;
-    const todo: Todo = await this.getTodoById(id, user);
+  async deleteTodo(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    const todo: Todo = await this.getTodoById(id);
     return this.todoService.deleteTodo(todo);
   }
 
@@ -61,7 +53,7 @@ export class TodoController {
     @Req() req,
   ): Promise<Todo> {
     const user = req.user;
-    const todo: Todo = await this.getTodoById(id, user);
+    const todo: Todo = await this.getTodoById(id);
     return this.todoService.updateTodo(todo, updateTodoDto);
   }
 }
