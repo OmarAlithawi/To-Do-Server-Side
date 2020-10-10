@@ -4,8 +4,6 @@ import { TodoController } from './todo.controller';
 import { TodoRepository } from './todo.repository';
 import { TodoService } from './todo.service';
 
-const mockRepo = () => ({});
-
 @Module({
   imports: [TypeOrmModule.forFeature([TodoRepository])],
   controllers: [TodoController],

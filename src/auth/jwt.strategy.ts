@@ -8,7 +8,7 @@ import { User } from './auth.entity';
 import { Payload } from './jwt.payload';
 import * as config from 'config';
 
-const jwtConfig = config.get('jwt');
+const JWT_CONFIG = config.get('jwt');
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -18,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.SERCRET || jwtConfig.sercret,
+      secretOrKey: process.env.SERCRET || JWT_CONFIG.sercret,
     });
   }
 
