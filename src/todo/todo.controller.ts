@@ -25,10 +25,7 @@ export class TodoController {
   constructor(private todoService: TodoService) {}
 
   @Get()
-  getTodo(
-    @Query(ValidationPipe) filterDto: FilterDto,
-    @Req() req,
-  ): Promise<Todo[]> {
+  getTodo(@Query() filterDto: FilterDto, @Req() req): Promise<Todo[]> {
     const user = req.user;
     return this.todoService.getTodo(filterDto, user);
   }

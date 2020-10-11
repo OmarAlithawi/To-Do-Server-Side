@@ -4,10 +4,12 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Todo } from '../todo/todo.entity';
 @Entity()
+@Unique(['name'])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
