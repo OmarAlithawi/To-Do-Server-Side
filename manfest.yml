@@ -1,0 +1,9 @@
+applications:
+- name: todolist-backend
+  buildpack: sdk-for-nodejs
+  command: npm run start:prod
+  instances: 1
+  memory: 64M
+  random-route: true
+  env:
+    OPTIMIZE_MEMORY: true
