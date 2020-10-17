@@ -1,2 +1,1 @@
-web: node dist/main
-port: process.env.PORT || 3000
+web:node dist/main
