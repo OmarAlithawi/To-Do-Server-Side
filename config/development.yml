@@ -4,4 +4,4 @@ db:
   database: 'todolist'
   synchronize: true
 jwt:
-  sercret: 'veryverysecret'
+  secret: 'veryverysecret'
