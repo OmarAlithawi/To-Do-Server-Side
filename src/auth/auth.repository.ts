@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { User } from './auth.entity';
 import { UserCredetialsDto } from './dto/user.credetials.dto';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import {
   BadRequestException,
   Logger,
